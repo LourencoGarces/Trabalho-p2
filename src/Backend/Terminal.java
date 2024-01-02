@@ -10,10 +10,9 @@ public class Terminal extends Equipamentos {
     public String getTipo() {
         return tipo;
     }
+
     @Override
     public String toString() {
         return "Terminal [MAC=" + getMac() + ", IP=" + getIp() + ", Tipo=" + tipo + "]";
     }
-
 }
-
