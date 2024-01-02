@@ -1,6 +1,7 @@
 package Backend;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Rede {
     private Equipamentos[][] matrizAdjacencia;
@@ -40,6 +41,20 @@ public class Rede {
             System.out.println("Equipamentos não encontrados na rede.");
         }
     }
+    // Método público para obter equipamento por MAC
+    public Equipamentos obterEquipamentoPorMac(String mac) {
+        for (Equipamentos[] linha : matrizAdjacencia) {
+            for (Equipamentos equipamento : linha) {
+                if (equipamento != null && equipamento instanceof Terminal && equipamento.getMac().equals(mac)) {
+                    return equipamento;
+                }
+            }
+        }
+        return null;
+    }
 
+    public Equipamentos[] getEquipamentos() {
+        return equipamentos.toArray(new Equipamentos[equipamentos.size()]);
+    }
     // Outros métodos conforme necessário
 }
