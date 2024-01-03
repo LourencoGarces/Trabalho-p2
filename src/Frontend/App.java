@@ -2,11 +2,11 @@ package Frontend;
 import Backend.Rede;
 import Backend.Equipamentos;
 import Backend.Terminal;
+import Backend.ConstrutorDeRede;
 
-import java.util.Scanner;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.InputMismatchException;
+import java.util.*;
+
+import static Backend.ConstrutorDeRede.construirRede;
 
 public class App {
     public static void main(String[] args) {
@@ -22,7 +22,6 @@ public class App {
                 case 1:
                     adicionarTerminal(teclado, redes);
                     break;
-
                 case 2:
                     enviarDados(teclado, redes);
                     break;
@@ -65,6 +64,7 @@ public class App {
             return -1; // Retorna um valor inválido para indicar que a opção não foi obtida corretamente
         }
     }
+
 
     private static void adicionarTerminal(Scanner teclado, Map<String, Rede> redes) {
         System.out.print("Digite o seu MAC: ");

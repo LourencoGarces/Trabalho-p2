@@ -4,10 +4,9 @@ public class Ligacao {
     private Equipamentos destino;
     private int distancia;
 
-    public Ligacao(Equipamentos origem, Equipamentos destino, int distancia) {
+    public Ligacao(Equipamentos origem, Equipamentos destino) {
         this.origem = origem;
         this.destino = destino;
-        this.distancia = distancia;
     }
     public Equipamentos getOrigem() {
         return origem;
