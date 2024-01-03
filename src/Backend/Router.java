@@ -1,8 +1,9 @@
 package Backend;
-public class Router extends Equipamentos {
+// Classe Roteador, que herda de Equipamento
+public class Router extends Equipamento {
     private String protocolo;
-    public Router(String mac, String ip, String protocolo) {
-        super(mac, ip);
+    public Router(String nome, String enderecoMAC, String protocolo) {
+        super(nome, enderecoMAC);
         this.protocolo = protocolo;
     }
     public String getProtocolo() {
@@ -10,6 +11,6 @@ public class Router extends Equipamentos {
     }
     @Override
     public String toString() {
-        return "Router [MAC=" + getMac() + ", IP=" + getIp() + ", Protocolo=" + protocolo + "]";
+        return "Roteador [NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", Protocolo=" + protocolo + "]";
     }
 }

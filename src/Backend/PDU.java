@@ -1,37 +1,40 @@
 package Backend;
 public class PDU {
-    private String sourceAddress;
-    private String destinationAddress;
-    private String payload;
-
+    private String header;
+    private String data;
+    private String trailer;
     // Construtor
-    public PDU(String sourceAddress, String destinationAddress, String payload) {
-        this.sourceAddress = sourceAddress;
-        this.destinationAddress = destinationAddress;
-        this.payload = payload;
+    public PDU(String header, String data, String trailer) {
+        this.header = header;
+        this.data = data;
+        this.trailer = trailer;
     }
-
-    // Métodos getter
-    public String getSourceAddress() {
-        return sourceAddress;
+    // Métodos para acessar e modificar os campos
+    public String getHeader() {
+        return header;
     }
-
-    public String getDestinationAddress() {
-        return destinationAddress;
+    public void setHeader(String header) {
+        this.header = header;
     }
-
-    public String getPayload() {
-        return payload;
+    public String getData() {
+        return data;
     }
-
-    // Método toString para representação de string da PDU
+    public void setData(String data) {
+        this.data = data;
+    }
+    public String getTrailer() {
+        return trailer;
+    }
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
+    }
+    // Método para representação textual da PDU
     @Override
     public String toString() {
         return "PDU{" +
-                "sourceAddress='" + sourceAddress + '\'' +
-                ", destinationAddress='" + destinationAddress + '\'' +
-                ", payload='" + payload + '\'' +
+                "header='" + header + '\'' +
+                ", data='" + data + '\'' +
+                ", trailer='" + trailer + '\'' +
                 '}';
     }
 }
-

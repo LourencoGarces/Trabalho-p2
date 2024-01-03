@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Rede {
-    private Equipamentos[][] matrizAdjacencia;
-    private List<Equipamentos> equipamentos;
+    private Equipamento[][] matrizAdjacencia;
+    private List<Equipamento> equipamentos;
 
     public Rede(int tamanho) {
-        this.matrizAdjacencia = new Equipamentos[tamanho][tamanho];
+        this.matrizAdjacencia = new Equipamento[tamanho][tamanho];
         this.equipamentos = new ArrayList<>();
     }
 
-    public void adicionarEquipamento(Equipamentos equipamento) {
+    public void adicionarEquipamento(Equipamento equipamento) {
         equipamentos.add(equipamento);
     }
 
-    public void adicionarLigacao(Equipamentos origem, Equipamentos destino) {
+    public void adicionarLigacao(Equipamento origem, Equipamento destino) {
         int indiceOrigem = equipamentos.indexOf(origem);
         int indiceDestino = equipamentos.indexOf(destino);
 
@@ -28,13 +28,13 @@ public class Rede {
         }
     }
 
-    public void comunicar(Equipamentos origem, Equipamentos destino, String mensagem) {
+    public void comunicar(Equipamento origem, Equipamento destino, String mensagem) {
         int indiceOrigem = equipamentos.indexOf(origem);
         int indiceDestino = equipamentos.indexOf(destino);
 
         if (indiceOrigem != -1 && indiceDestino != -1) {
-            Equipamentos equipOrigem = equipamentos.get(indiceOrigem);
-            Equipamentos equipDestino = equipamentos.get(indiceDestino);
+            Equipamento equipOrigem = equipamentos.get(indiceOrigem);
+            Equipamento equipDestino = equipamentos.get(indiceDestino);
 
             System.out.println("Comunicando de " + equipOrigem + " para " + equipDestino + ": " + mensagem);
         } else {
@@ -42,10 +42,10 @@ public class Rede {
         }
     }
     // Método público para obter equipamento por MAC
-    public Equipamentos obterEquipamentoPorMac(String mac) {
-        for (Equipamentos[] linha : matrizAdjacencia) {
-            for (Equipamentos equipamento : linha) {
-                if (equipamento != null && equipamento instanceof Terminal && equipamento.getMac().equals(mac)) {
+    public Equipamento obterEquipamentoPorMac(String mac) {
+        for (Equipamento[] linha : matrizAdjacencia) {
+            for (Equipamento equipamento : linha) {
+                if (equipamento != null && equipamento instanceof Terminal && equipamento.getEnderecoMAC().equals(mac)) {
                     return equipamento;
                 }
             }
@@ -53,8 +53,8 @@ public class Rede {
         return null;
     }
 
-    public Equipamentos[] getEquipamentos() {
-        return equipamentos.toArray(new Equipamentos[equipamentos.size()]);
+    public Equipamento[] getEquipamentos() {
+        return equipamentos.toArray(new Equipamento[equipamentos.size()]);
     }
     // Outros métodos conforme necessário
 }

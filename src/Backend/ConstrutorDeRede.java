@@ -1,51 +1,101 @@
 package Backend;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ConstrutorDeRede {
-        public static List<Equipamentos> construirRede() {
-                // Criação de dispositivosDispositivoTerminal computador1 = new DispositivoTerminal("Computador1", "192.168.1.1", "00:1A:2B:3C:4D:5E");
-                Terminal computador2 = new Terminal("Computador2", "192.168.1.2", "00:2A:3B:4C:5D:6E");
-
-                Switch switch1 = new Switch("Switch1", "1", 2);
-                Router roteador1 = new Router("Roteador1", "1", "00:4A:5B:6C:7D:8E");
-                Servidor servidor1 = new Servidor("Servidor", "1", 10);
-
-                // Criação de conexões
-                Ligacao conexao2 = new Ligacao(computador2, switch1);
-                Ligacao conexao3 = new Ligacao(switch1, roteador1);
-                Ligacao conexao4 = new Ligacao(roteador1, servidor1);
-
-                // Construção da lista de dispositivos
-                List<Equipamentos> dispositivos = new ArrayList<>();
-                dispositivos.add(computador2);
-                dispositivos.add(switch1);
-                dispositivos.add(roteador1);
-                dispositivos.add(servidor1);
-
-                // Adição das conexões entre dispositivos
+        public static void construirRede() {
+                Scanner scanner = new Scanner(System.in);
+                List<Equipamento> dispositivos = new ArrayList<>();
                 List<Ligacao> conexoes = new ArrayList<>();
-                conexoes.add(conexao2);
-                conexoes.add(conexao3);
-                conexoes.add(conexao4);
-                return dispositivos;
-        }
 
-        private static void imprimirRede(List < Equipamentos > dispositivos, List < Ligacao > conexoes){
-                System.out.println("Dispositivos de Rede:");
-                for (Equipamentos dispositivo : dispositivos) {
-                        System.out.println("- " + dispositivo);
+                int opcao;
+                do {
+                        System.out.println("Menu:");
+                        System.out.println("1. Adicionar Computador");
+                        System.out.println("2. Adicionar Switch");
+                        System.out.println("3. Adicionar Roteador");
+                        System.out.println("4. Adicionar Servidor");
+                        System.out.println("0. Sair");
+                        System.out.print("Escolha uma opção: ");
+                        opcao = scanner.nextInt();
+                        scanner.nextLine();  // Consume the newline character
+
+                        switch (opcao) {
+                                case 1:
+                                        System.out.println("Digite o nome do computador: ");
+                                        String nome = scanner.nextLine();
+                                        System.out.println("Digite o endereço MAC do computador: ");
+                                        String enderecoMAC = scanner.nextLine();
+                                        System.out.println("Digite o endereço IP do computador: ");
+                                        String enderecoIP = scanner.nextLine();
+                                        Terminal computador = new Terminal(nome, enderecoMAC, enderecoIP);
+                                        dispositivos.add(computador);
+                                        adicionarConexao(scanner, dispositivos, conexoes, computador);
+                                        break;
+                                case 2:
+                                        System.out.println("Digite o nome do switch: ");
+                                        String nomeSwitch = scanner.nextLine();
+                                        System.out.println("Digite o endereço MAC do switch: ");
+                                        String enderecoMACSwitch = scanner.nextLine();
+                                        System.out.println("Digite o número de portas do switch: ");
+                                        int numeroPortas = scanner.nextInt();
+                                        Switch switchDevice = new Switch(nomeSwitch, enderecoMACSwitch, numeroPortas);
+                                        dispositivos.add(switchDevice);
+                                        adicionarConexao(scanner, dispositivos, conexoes, switchDevice);
+                                        break;
+                                case 3:
+                                        System.out.println("Digite o nome do router: ");
+                                        String nomeRouter = scanner.nextLine();
+                                        System.out.println("Digite o endereço MAC do router: ");
+                                        String enderecoMACRouter = scanner.nextLine();
+                                        System.out.println("Digite o protocolo do router: ");
+                                        String protocolo = scanner.nextLine();
+                                        Router router = new Router(nomeRouter, enderecoMACRouter, protocolo);
+                                        dispositivos.add(router);
+                                        adicionarConexao(scanner, dispositivos, conexoes, router);
+                                        break;
+                                case 4:
+                                        System.out.println("Digite o nome do servidor: ");
+                                        String nomeServidor = scanner.nextLine();
+                                        System.out.println("Digite o endereço MAC do servidor: ");
+                                        String enderecoMACServidor = scanner.nextLine();
+                                        System.out.println("Digite o endereço Ip do servidor: ");
+                                        String enderecoIPServidor = scanner.nextLine();
+                                        System.out.println("Digite a capacidade do servidor: ");
+                                        int capacidade = scanner.nextInt();
+                                        Servidor servidor = new Servidor(nomeServidor, enderecoMACServidor, enderecoIPServidor, capacidade);
+                                        dispositivos.add(servidor);
+                                        adicionarConexao(scanner, dispositivos, conexoes, servidor);
+                                        break;
+                                case 0:
+                                        System.out.println("Saindo do programa. Construção da rede finalizada.");
+                                        break;
+                                default:
+                                        System.out.println("Opção inválida. Tente novamente.");
+                        }
+
+                } while (opcao != 0);
+        }
+        private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes, Equipamento dispositivo) {
+                System.out.println("Conectar a qual dispositivo existente? (Informe o índice)");
+                for (int i = 0; i < dispositivos.size(); i++) {
+                        System.out.println(i + ". " + dispositivos.get(i));
                 }
 
-                System.out.println("\nConexões:");
-                for (Ligacao conexao : conexoes) {
-                        System.out.println("- " + conexao);
+                int indice = scanner.nextInt();
+                scanner.nextLine();  // Consume the newline character
+
+                if (indice >= 0 && indice < dispositivos.size()) {
+                        System.out.println("Escolha o tipo de conexão (ex. wireless, ethernet): ");
+                        String tipoConexao = scanner.nextLine();
+
+                        Ligacao conexao = new Ligacao(dispositivo, dispositivos.get(indice), tipoConexao);
+                        conexoes.add(conexao);
+                        System.out.println("Dispositivos conectados.");
+                } else {
+                        System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
                 }
         }
-
 
 }
-
-
-

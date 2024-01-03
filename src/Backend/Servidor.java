@@ -1,18 +1,20 @@
 package Backend;
-public class Servidor extends Equipamentos {
+public class Servidor extends Equipamento {
+    private String enderecoIP;
     private int capacidade;
-
-    public Servidor(String mac, String ip, int capacidade) {
-        super(mac, ip);
+    public Servidor(String nome, String enderecoMAC, String enderecoIP, int capacidade) {
+        super(nome, enderecoMAC);
+        this.enderecoIP = enderecoIP;
         this.capacidade = capacidade;
     }
-
+    public String getEnderecoIP() {
+        return enderecoIP;
+    }
     public int getCapacidade() {
         return capacidade;
     }
-
     @Override
     public String toString() {
-        return "Servidor [MAC=" + getMac() + ", IP=" + getIp() + ", Capacidade=" + capacidade + "]";
+        return "Servidor [NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", IP=" + enderecoIP + ", Capacidade=" + capacidade + "]";
     }
 }

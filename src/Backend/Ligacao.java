@@ -1,24 +1,24 @@
 package Backend;
 public class Ligacao {
-    private Equipamentos origem;
-    private Equipamentos destino;
-    private int distancia;
-
-    public Ligacao(Equipamentos origem, Equipamentos destino) {
-        this.origem = origem;
-        this.destino = destino;
+    private Equipamento macorigem;
+    private Equipamento macdestino;
+    private String tipoConexao;
+    public Ligacao(Equipamento macorigem, Equipamento macdestino, String tipoConexao) {
+        this.macorigem = macorigem;
+        this.macdestino = macdestino;
+        this.tipoConexao = tipoConexao;
     }
-    public Equipamentos getOrigem() {
-        return origem;
+    public Equipamento getMacOrigem() {
+        return macorigem;
     }
-    public Equipamentos getDestino() {
-        return destino;
+    public Equipamento getMacDestino() {
+        return macdestino;
     }
-    public int getDistancia() {
-        return distancia;
+    public String getTipoConexao() {
+        return tipoConexao;
     }
     @Override
     public String toString() {
-        return "Ligacao [Origem=" + origem + ", Destino=" + destino + ", Distancia=" + distancia + "]";
+        return "Ligacao [MacOrigem=" + macorigem + ", MacDestino=" + macdestino + ", TipoConexao=" + tipoConexao + "]";
     }
 }
