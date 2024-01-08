@@ -15,6 +15,6 @@ public class Servidor extends Equipamento {
     }
     @Override
     public String toString() {
-        return "Servidor [NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", IP=" + enderecoIP + ", Capacidade=" + capacidade + "]";
+        return "[NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", IP=" + enderecoIP + ", Capacidade=" + capacidade + "]";
     }
 }

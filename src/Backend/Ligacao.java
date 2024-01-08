@@ -19,6 +19,6 @@ public class Ligacao {
     }
     @Override
     public String toString() {
-        return "Ligacao [MacOrigem=" + macorigem + ", MacDestino=" + macdestino + ", TipoConexao=" + tipoConexao + "]";
+        return "Ligacao [" + macorigem + macdestino + ", TipoConexao=" + tipoConexao + "]";
     }
 }

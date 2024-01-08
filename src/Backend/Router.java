@@ -11,6 +11,6 @@ public class Router extends Equipamento {
     }
     @Override
     public String toString() {
-        return "Roteador [NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", Protocolo=" + protocolo + "]";
+        return "[NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", Protocolo=" + protocolo + "]";
     }
 }

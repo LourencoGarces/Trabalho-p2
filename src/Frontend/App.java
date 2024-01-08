@@ -7,23 +7,24 @@ import Backend.Servidor;
 import Backend.Switch;
 import Backend.Router;
 import Backend.Terminal;
+import Backend.PDU;
+import Backend.Header;
+import Backend.Data;
+import Backend.Trailer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
-
+    private static List<Equipamento> dispositivos = new ArrayList<>();
+    private static List<Ligacao> conexoes = new ArrayList<>();
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int opcao;
         do {
-            System.out.println("Menu:");
-            System.out.println("1. Construir Rede");
-            System.out.println("2. Imprimir Rede");
-            System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
+            exibirMenu();
             opcao = getInputInt(scanner);
 
             switch (opcao) {
@@ -31,7 +32,7 @@ public class App {
                     construirRede();
                     break;
                 case 2:
-                    //imprimirRede();
+                    imprimirRede(dispositivos, conexoes);
                     break;
                 case 0:
                     System.out.println("Saindo do programa.");
@@ -45,22 +46,15 @@ public class App {
         scanner.close();
     }
 
-    private static void imprimirRede(List<Equipamento> dispositivos, List<Ligacao> conexoes) {
-        System.out.println("Dispositivos de Rede:");
-        for (Equipamento dispositivo : dispositivos) {
-            System.out.println("- " + dispositivo);
-        }
-
-        System.out.println("\nConexões:");
-        for (Ligacao conexao : conexoes) {
-            System.out.println("- " + conexao);
-        }
+    private static void exibirMenu() {
+        System.out.println("Menu:");
+        System.out.println("1. Construir Rede");
+        System.out.println("2. Imprimir Rede");
+        System.out.println("0. Sair");
+        System.out.print("Escolha uma opção: ");
     }
-
     public static void construirRede() {
         Scanner scanner = new Scanner(System.in);
-        List<Equipamento> dispositivos = new ArrayList<>();
-        List<Ligacao> conexoes = new ArrayList<>();
 
         int opcao;
         do {
@@ -96,7 +90,6 @@ public class App {
         } while (opcao != 0);
         scanner.close();
     }
-
     private static void adicionarComputador(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         System.out.println("Digite o nome do computador: ");
         String nome = scanner.nextLine();
@@ -112,7 +105,6 @@ public class App {
             System.out.println("Computador adicionado.");
         }
     }
-
     private static void adicionarSwitch(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         System.out.println("Digite o nome do switch: ");
         String nomeSwitch = scanner.nextLine();
@@ -128,7 +120,6 @@ public class App {
             System.out.println("Switch adicionado.");
         }
     }
-
     private static void adicionarRouter(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         System.out.println("Digite o nome do router: ");
         String nomeRouter = scanner.nextLine();
@@ -138,9 +129,12 @@ public class App {
         String protocolo = scanner.nextLine();
         Router router = new Router(nomeRouter, enderecoMACRouter, protocolo);
         dispositivos.add(router);
-        adicionarConexao(scanner, dispositivos, conexoes, router);
+        if(dispositivos.size() > 1) {
+            adicionarConexao(scanner, dispositivos, conexoes, router);
+        }else {
+            System.out.println("Router adicionado.");
+        }
     }
-
     private static void adicionarServidor(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         System.out.println("Digite o nome do servidor: ");
         String nomeServidor = scanner.nextLine();
@@ -152,34 +146,15 @@ public class App {
         int capacidade = scanner.nextInt();
         Servidor servidor = new Servidor(nomeServidor, enderecoMACServidor, enderecoIPServidor, capacidade);
         dispositivos.add(servidor);
-        adicionarConexao(scanner, dispositivos, conexoes, servidor);
-    }
-
-    private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes, Equipamento dispositivo) {
-        System.out.println("Conectar a qual dispositivo existente? (Informe o índice)");
-        for (int i = 0; i < dispositivos.size(); i++) {
-            System.out.println(i + ". " + dispositivos.get(i));
-        }
-        int indice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character
-
-        if (indice >= 0 && indice < dispositivos.size()) {
-            System.out.println("Escolha o tipo de conexão (ex. WIRELESS, ETHERNET): ");
-            String tipoConexaoStr = scanner.nextLine().toUpperCase(); // Converta para maiúsculas para garantir a correspondência
-            try {
-                TipoConexao tipoConexao = TipoConexao.valueOf(tipoConexaoStr);
-
-                Ligacao conexao = new Ligacao(dispositivo, dispositivos.get(indice), tipoConexao);
-                conexoes.add(conexao);
-                System.out.println("Dispositivos conectados.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Tipo de conexão inválido. Não foi possível estabelecer a conexão.");
-            }
-        } else {
-            System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
+        if(dispositivos.size() > 1) {
+            adicionarConexao(scanner, dispositivos, conexoes, servidor);
+        }else {
+            System.out.println("Servidor adicionado.");
         }
     }
+    private static void adicionarConexao() {
 
+    }
     private static int getInputInt(Scanner scanner) {
         while (true) {
             try {
@@ -187,6 +162,74 @@ public class App {
             } catch (NumberFormatException e) {
                 System.out.println("Entrada inválida. Por favor, insira um número válido.");
             }
+        }
+    }
+    private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes, Equipamento dispositivo) {
+        exibirDispositivos(dispositivos);
+
+        int indice = obterIndiceValido(scanner, dispositivos.size());
+
+        if (indice != -1) {
+            TipoConexao tipoConexao = obterTipoConexao(scanner);
+
+            if (tipoConexao != null) {
+                Equipamento destino = dispositivos.get(indice);
+                Ligacao conexao = new Ligacao(dispositivo, destino, tipoConexao);
+
+                dispositivo.adicionarLigacao(destino, tipoConexao);
+                conexoes.add(conexao);
+
+                System.out.println("Conexão estabelecida com sucesso.");
+            } else {
+                System.out.println("Tipo de conexão inválida. Não foi possível estabelecer a conexão.");
+            }
+        } else {
+            System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
+        }
+    }
+
+    private static int obterIndiceValido(Scanner scanner, int tamanhoMaximo) {
+        while (true) {
+            System.out.print("Escolha o dispositivo existente (informe o índice): ");
+            int indice = getInputInt(scanner);
+
+            if (indice >= 0 && indice < tamanhoMaximo) {
+                return indice;
+            } else {
+                System.out.println("Índice inválido. Tente novamente.");
+            }
+        }
+    }
+    private static TipoConexao obterTipoConexao(Scanner scanner) {
+        System.out.print("Escolha o tipo de conexão (ex. WIRELESS, ETHERNET): ");
+        String tipoConexaoStr = scanner.nextLine().toUpperCase();
+
+        try {
+            return TipoConexao.valueOf(tipoConexaoStr);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    public static void imprimirRede(List<Equipamento> dispositivos, List<Ligacao> conexoes) {
+        exibirDispositivos(dispositivos);
+        exibirConexoes(conexoes);
+    }
+
+    private static void exibirDispositivos(List<Equipamento> dispositivos) {
+        System.out.println("Dispositivos de Rede:");
+        for (Equipamento dispositivo : dispositivos) {
+            System.out.println("- " + dispositivo);
+        }
+    }
+
+    private static void exibirConexoes(List<Ligacao> conexoes) {
+        if (!conexoes.isEmpty()) {
+            System.out.println("\nConexões:");
+            for (Ligacao conexao : conexoes) {
+                System.out.println("- " + conexao);
+            }
+        } else {
+            System.out.println("\nNenhuma conexão estabelecida.");
         }
     }
 }

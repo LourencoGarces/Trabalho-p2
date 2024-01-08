@@ -11,6 +11,6 @@ public class Terminal extends Equipamento {
     }
     @Override
     public String toString() {
-        return "Terminal [NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", Ip=" + ip + "]";
+        return "[NOME=" + getNome() + ", MAC=" + getEnderecoMAC() + ", Ip=" + ip + "]";
     }
 }
