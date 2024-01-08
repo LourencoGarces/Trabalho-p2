@@ -23,15 +23,14 @@ public class App {
             System.out.println("2. Imprimir Rede");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine();  // Consume the newline character
+            opcao = getInputInt(scanner);
 
             switch (opcao) {
                 case 1:
                     construirRede();
                     break;
                 case 2:
-                    // imprimirRede(List<Equipamento> dispositivos, List<Ligacao> conexoes);
+                    //imprimirRede();
                     break;
                 case 0:
                     System.out.println("Saindo do programa.");
@@ -71,8 +70,7 @@ public class App {
             System.out.println("4. Adicionar Servidor");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine();  // Consume the newline character
+            opcao = getInputInt(scanner);
 
             switch (opcao) {
                 case 1:
@@ -89,13 +87,12 @@ public class App {
                     break;
                 case 0:
                     System.out.println("Saindo do programa. Construção da rede finalizada.");
-                    break;
+                    return;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
 
         } while (opcao != 0);
-
         scanner.close();
     }
 
@@ -108,7 +105,11 @@ public class App {
         String enderecoIP = scanner.nextLine();
         Terminal computador = new Terminal(nome, enderecoMAC, enderecoIP);
         dispositivos.add(computador);
-        adicionarConexao(scanner, dispositivos, conexoes, computador);
+        if(dispositivos.size() > 1) {
+            adicionarConexao(scanner, dispositivos, conexoes, computador);
+        }else {
+            System.out.println("Computador adicionado.");
+        }
     }
 
     private static void adicionarSwitch(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
@@ -120,7 +121,11 @@ public class App {
         int numeroPortas = scanner.nextInt();
         Switch switchDevice = new Switch(nomeSwitch, enderecoMACSwitch, numeroPortas);
         dispositivos.add(switchDevice);
-        adicionarConexao(scanner, dispositivos, conexoes, switchDevice);
+        if(dispositivos.size() > 1) {
+            adicionarConexao(scanner, dispositivos, conexoes, switchDevice);
+        }else {
+            System.out.println("Switch adicionado.");
+        }
     }
 
     private static void adicionarRouter(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
@@ -167,6 +172,16 @@ public class App {
             System.out.println("Dispositivos conectados.");
         } else {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
+        }
+    }
+
+    private static int getInputInt(Scanner scanner) {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, insira um número válido.");
+            }
         }
     }
 }
