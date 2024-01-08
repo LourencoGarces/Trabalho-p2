@@ -2,8 +2,8 @@ package Backend;
 public class Ligacao {
     private Equipamento macorigem;
     private Equipamento macdestino;
-    private String tipoConexao;
-    public Ligacao(Equipamento macorigem, Equipamento macdestino, String tipoConexao) {
+    private TipoConexao tipoConexao;
+    public Ligacao(Equipamento macorigem, Equipamento macdestino, TipoConexao tipoConexao) {
         this.macorigem = macorigem;
         this.macdestino = macdestino;
         this.tipoConexao = tipoConexao;
@@ -14,7 +14,7 @@ public class Ligacao {
     public Equipamento getMacDestino() {
         return macdestino;
     }
-    public String getTipoConexao() {
+    public TipoConexao getTipoConexao() {
         return tipoConexao;
     }
     @Override

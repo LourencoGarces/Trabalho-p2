@@ -1,5 +1,6 @@
 package Frontend;
 
+import Backend.TipoConexao;
 import Backend.Equipamento;
 import Backend.Ligacao;
 import Backend.Servidor;
@@ -159,17 +160,21 @@ public class App {
         for (int i = 0; i < dispositivos.size(); i++) {
             System.out.println(i + ". " + dispositivos.get(i));
         }
-
         int indice = scanner.nextInt();
         scanner.nextLine();  // Consume the newline character
 
         if (indice >= 0 && indice < dispositivos.size()) {
-            System.out.println("Escolha o tipo de conexão (ex. wireless, ethernet): ");
-            String tipoConexao = scanner.nextLine();
+            System.out.println("Escolha o tipo de conexão (ex. WIRELESS, ETHERNET): ");
+            String tipoConexaoStr = scanner.nextLine().toUpperCase(); // Converta para maiúsculas para garantir a correspondência
+            try {
+                TipoConexao tipoConexao = TipoConexao.valueOf(tipoConexaoStr);
 
-            Ligacao conexao = new Ligacao(dispositivo, dispositivos.get(indice), tipoConexao);
-            conexoes.add(conexao);
-            System.out.println("Dispositivos conectados.");
+                Ligacao conexao = new Ligacao(dispositivo, dispositivos.get(indice), tipoConexao);
+                conexoes.add(conexao);
+                System.out.println("Dispositivos conectados.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Tipo de conexão inválido. Não foi possível estabelecer a conexão.");
+            }
         } else {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
         }
