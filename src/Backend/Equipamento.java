@@ -2,8 +2,8 @@ package Backend;
 import java.util.ArrayList;
 import java.util.List;
 public class Equipamento {
-    private String nome;
-    private String enderecoMAC;
+    private final String nome;
+    private final String enderecoMAC;
     private List<Ligacao> ligacoes = new ArrayList<>();
 
     public Equipamento(String nome, String enderecoMAC) {
