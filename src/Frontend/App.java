@@ -59,22 +59,26 @@ public class App {
             System.out.println("2. Adicionar Switch");
             System.out.println("3. Adicionar Roteador");
             System.out.println("4. Adicionar Servidor");
+            System.out.println("5. Adicionar Conexão");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = getInputInt(scanner);
 
             switch (opcao) {
                 case 1:
-                    adicionarComputador(scanner, dispositivos, conexoes);
+                    adicionarComputador(scanner, dispositivos);
                     break;
                 case 2:
-                    adicionarSwitch(scanner, dispositivos, conexoes);
+                    adicionarSwitch(scanner, dispositivos);
                     break;
                 case 3:
-                    adicionarRouter(scanner, dispositivos, conexoes);
+                    adicionarRouter(scanner, dispositivos);
                     break;
                 case 4:
-                    adicionarServidor(scanner, dispositivos, conexoes);
+                    adicionarServidor(scanner, dispositivos);
+                    break;
+                case 5:
+                    adicionarConexao(scanner, dispositivos, conexoes);
                     break;
                 case 0:
                     System.out.println("Saindo do programa. Construção da rede finalizada.");
@@ -82,11 +86,10 @@ public class App {
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
-
         } while (opcao != 0);
         scanner.close();
     }
-    private static void adicionarComputador(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
+    private static void adicionarComputador(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do computador: ");
         String nome = scanner.nextLine();
 
@@ -112,15 +115,8 @@ public class App {
 
         Terminal computador = new Terminal(nome, enderecoMAC, enderecoIP);
         dispositivos.add(computador);
-
-        if (dispositivos.size() > 1) {
-            adicionarConexao(scanner, dispositivos, conexoes, computador);
-        } else {
-            System.out.println("Computador adicionado.");
-        }
     }
-
-    private static void adicionarSwitch(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
+    private static void adicionarSwitch(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do switch: ");
         String nomeSwitch = scanner.nextLine();
         // Verifica se o nome já existe
@@ -140,13 +136,8 @@ public class App {
         int numeroPortas = scanner.nextInt();
         Switch switchDevice = new Switch(nomeSwitch, enderecoMACSwitch, numeroPortas);
         dispositivos.add(switchDevice);
-        if(dispositivos.size() > 1) {
-            adicionarConexao(scanner, dispositivos, conexoes, switchDevice);
-        }else {
-            System.out.println("Switch adicionado.");
-        }
     }
-    private static void adicionarRouter(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
+    private static void adicionarRouter(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do router: ");
         String nomeRouter = scanner.nextLine();
         // Verifica se o nome já existe
@@ -165,13 +156,8 @@ public class App {
         String protocolo = scanner.nextLine();
         Router router = new Router(nomeRouter, enderecoMACRouter, protocolo);
         dispositivos.add(router);
-        if(dispositivos.size() > 1) {
-            adicionarConexao(scanner, dispositivos, conexoes, router);
-        }else {
-            System.out.println("Router adicionado.");
-        }
     }
-    private static void adicionarServidor(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
+    private static void adicionarServidor(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do servidor: ");
         String nomeServidor = scanner.nextLine();
         // Verifica se o nome já existe
@@ -192,11 +178,6 @@ public class App {
         int capacidade = scanner.nextInt();
         Servidor servidor = new Servidor(nomeServidor, enderecoMACServidor, enderecoIPServidor, capacidade);
         dispositivos.add(servidor);
-        if(dispositivos.size() > 1) {
-            adicionarConexao(scanner, dispositivos, conexoes, servidor);
-        }else {
-            System.out.println("Servidor adicionado.");
-        }
     }
     private static boolean equipamentoComNomeJaExiste(List<Equipamento> dispositivos, String nome) {
         return dispositivos.stream().anyMatch(equipamento -> equipamento.getNome().equals(nome));
@@ -213,16 +194,15 @@ public class App {
             }
         }
     }
-    private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes, Equipamento dispositivo) {
+    private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         exibirDispositivos(dispositivos);
-
         int indice = obterIndiceValido(scanner, dispositivos.size());
-
         if (indice != -1) {
             TipoConexao tipoConexao = obterTipoConexao(scanner);
 
             if (tipoConexao != null) {
-                Equipamento destino = dispositivos.get(indice);
+                Equipamento dispositivo = dispositivos.get(indice);
+                Equipamento destino = selecionarDestino(scanner);
 
                 if (destino != null) {
                     estabelecerConexao(dispositivo, destino, tipoConexao, conexoes);
@@ -235,6 +215,13 @@ public class App {
         } else {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
         }
+    }
+
+    private static Equipamento selecionarDestino(Scanner scanner) {
+        System.out.print("Escolha o dispositivo destino (informe o índice): ");
+        int indice = obterIndiceValido(scanner, dispositivos.size());
+
+        return (indice != -1) ? dispositivos.get(indice) : null;
     }
     private static void estabelecerConexao(Equipamento dispositivo, Equipamento destino, TipoConexao tipoConexao, List<Ligacao> conexoes) {
         Ligacao conexao = new Ligacao(dispositivo, destino, tipoConexao);
