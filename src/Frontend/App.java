@@ -224,21 +224,10 @@ public class App {
             if (tipoConexao != null) {
                 Equipamento destino = dispositivos.get(indice);
 
-                // Estabelecer a conexão
-                Ligacao conexao = new Ligacao(dispositivo, destino, tipoConexao);
-                dispositivo.adicionarLigacao(destino, tipoConexao);
-                conexoes.add(conexao);
-
-                // Atualizar o número de portas/disponibilidade no dispositivo de destino
-                if (destino instanceof Switch switchDestino) {
-                    switchDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), switchDestino.getNumeroPortas() - 1);
-                    System.out.println("Conexão estabelecida com sucesso no Switch.");
-                } else if (destino instanceof Servidor servidorDestino) {
-                    servidorDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), servidorDestino.getCapacidade() - 1);
-                    System.out.println("Conexão estabelecida com sucesso no Servidor.");
+                if (destino != null) {
+                    estabelecerConexao(dispositivo, destino, tipoConexao, conexoes);
                 } else {
-                    // Adicione lógica para outros tipos de destino, se aplicável
-                    System.out.println("Conexão estabelecida com sucesso.");
+                    System.out.println("Destino inválido. Não foi possível estabelecer a conexão.");
                 }
             } else {
                 System.out.println("Tipo de conexão inválida. Não foi possível estabelecer a conexão.");
@@ -247,7 +236,39 @@ public class App {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
         }
     }
+    private static void estabelecerConexao(Equipamento dispositivo, Equipamento destino, TipoConexao tipoConexao, List<Ligacao> conexoes) {
+        Ligacao conexao = new Ligacao(dispositivo, destino, tipoConexao);
+        dispositivo.adicionarLigacao(destino, tipoConexao);
+        conexoes.add(conexao);
 
+        if (destino instanceof Switch switchDestino) {
+            adicionarConexaoNoSwitch(dispositivo, switchDestino);
+        } else if (destino instanceof Servidor servidorDestino) {
+            adicionarConexaoNoServidor(dispositivo, servidorDestino);
+        } else {
+            System.out.println("Conexão estabelecida com sucesso.");
+        }
+    }
+    private static void adicionarConexaoNoSwitch(Equipamento dispositivo, Switch switchDestino) {
+        int portasDisponiveis = switchDestino.getPortasDisponiveis();
+
+        if (portasDisponiveis > 0) {
+            int portaDestino = switchDestino.getNumeroPortas() - portasDisponiveis;
+
+            switchDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), portaDestino);
+            switchDestino.registrarPortaOcupada(portaDestino, dispositivo.getEnderecoMAC());
+            System.out.println("Conexão estabelecida com sucesso no Switch.");
+
+            // Imprimir o mapa de portas do Switch
+            switchDestino.imprimirMapaPortas();
+        } else {
+            System.out.println("Não há portas disponíveis no Switch para estabelecer a conexão.");
+        }
+    }
+    private static void adicionarConexaoNoServidor(Equipamento dispositivo, Servidor servidorDestino) {
+        servidorDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), servidorDestino.getCapacidade() - 1);
+        System.out.println("Conexão estabelecida com sucesso no Servidor.");
+    }
     private static int obterIndiceValido(Scanner scanner, int tamanhoMaximo) {
         while (true) {
             System.out.print("Escolha o dispositivo existente (informe o índice): ");
