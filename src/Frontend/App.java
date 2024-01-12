@@ -196,16 +196,17 @@ public class App {
     }
     private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         exibirDispositivos(dispositivos);
-        int indice = obterIndiceValido(scanner, dispositivos.size());
+        Equipamento origem = selecionarOrigem(scanner);
+        int indice = dispositivos.indexOf(origem);
+
         if (indice != -1) {
             TipoConexao tipoConexao = obterTipoConexao(scanner);
 
             if (tipoConexao != null) {
-                Equipamento dispositivo = dispositivos.get(indice);
                 Equipamento destino = selecionarDestino(scanner);
 
                 if (destino != null) {
-                    estabelecerConexao(dispositivo, destino, tipoConexao, conexoes);
+                    estabelecerConexao(origem, destino, tipoConexao, conexoes);
                 } else {
                     System.out.println("Destino inválido. Não foi possível estabelecer a conexão.");
                 }
@@ -215,6 +216,12 @@ public class App {
         } else {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
         }
+    }
+    private static Equipamento selecionarOrigem(Scanner scanner) {
+        System.out.print("Escolha o dispositivo Origem (informe o índice): ");
+        int indice = obterIndiceValido(scanner, dispositivos.size());
+
+        return (indice != -1) ? dispositivos.get(indice) : null;
     }
     private static Equipamento selecionarDestino(Scanner scanner) {
         System.out.print("Escolha o dispositivo destino (informe o índice): ");
@@ -272,10 +279,24 @@ public class App {
     private static void adicionarConexaoNoServidor(Equipamento dispositivo, Servidor servidorDestino) {
         servidorDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), servidorDestino.getCapacidade() - 1);
         System.out.println("Conexão estabelecida com sucesso no Servidor.");
+        int capacidadeDisponivel = servidorDestino.getCapacidade();
+
+        if (capacidadeDisponivel > 0) {
+            int portaDestino = servidorDestino.getCapacidade() - capacidadeDisponivel;
+
+            servidorDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), portaDestino);
+            servidorDestino.registrarPortaOcupada(portaDestino, dispositivo.getEnderecoMAC());
+            System.out.println("Conexão estabelecida com sucesso no Servidor.");
+
+            // Imprimir o mapa de ligações do Servidor
+            servidorDestino.imprimirMapaPortas();
+        } else {
+            System.out.println("Não há mais capacidade no Servidor para estabelecer a conexão.");
+        }
     }
     private static int obterIndiceValido(Scanner scanner, int tamanhoMaximo) {
         while (true) {
-            System.out.print("Escolha o dispositivo existente (informe o índice): ");
+            //System.out.print("Escolha o dispositivo existente (informe o índice): ");
             int indice = getInputInt(scanner);
 
             if (indice >= 0 && indice < tamanhoMaximo) {

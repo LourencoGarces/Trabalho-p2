@@ -28,6 +28,19 @@ public class Servidor extends Equipamento {
     }
     // Adiciona um endereço MAC e a porta correspondente à tabela de encaminhamento
     public void adicionarEntradaTabelaEncaminhamento(String enderecoMAC, int porta) {
+        // Verifica se o endereço MAC já está na tabela de encaminhamento
+        if (tabelaEncaminhamento.containsKey(enderecoMAC)) {
+            System.out.println("Endereço MAC " + enderecoMAC + " já está atribuído a uma porta.");
+            return;
+        }
+
+        // Verifica se a porta já está ocupada
+        if (tabelaEncaminhamento.containsValue(porta)) {
+            System.out.println("Porta " + porta + " já está ocupada por outro endereço MAC.");
+            return;
+        }
+
+        // Adiciona o endereço MAC e a porta correspondente à tabela de encaminhamento
         tabelaEncaminhamento.put(enderecoMAC, porta);
         usarCapacidade(); // Usa um lugar
     }
@@ -35,6 +48,15 @@ public class Servidor extends Equipamento {
     public void usarCapacidade() {
         if (capacidade > 0) {
             capacidade--;
+        }
+    }
+    public void registrarPortaOcupada(int porta, String enderecoMACDestino) {
+        tabelaEncaminhamento.put(enderecoMACDestino, porta);
+    }
+    public void imprimirMapaPortas() {
+        System.out.println("Mapa de Portas:" + getNome());
+        for (Map.Entry<String, Integer> entrada : tabelaEncaminhamento.entrySet()) {
+            System.out.println("MAC: " + entrada.getKey() + ", Porta: " + entrada.getValue());
         }
     }
     @Override

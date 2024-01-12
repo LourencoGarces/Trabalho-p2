@@ -54,7 +54,7 @@ public class Switch extends Equipamento {
         tabelaEncaminhamento.put(enderecoMACDestino, porta);
     }
     public void imprimirMapaPortas() {
-        System.out.println("Mapa de Portas:");
+        System.out.println("Mapa de Portas:" + getNome());
         for (Map.Entry<String, Integer> entrada : tabelaEncaminhamento.entrySet()) {
             System.out.println("MAC: " + entrada.getKey() + ", Porta: " + entrada.getValue());
         }
