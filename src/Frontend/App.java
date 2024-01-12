@@ -235,8 +235,24 @@ public class App {
         conexoes.add(conexao);
 
         if (destino instanceof Switch switchDestino) {
-            adicionarConexaoNoSwitch(dispositivo, switchDestino);
+            if (dispositivo instanceof Router routerDispositivo) {
+                adicionarConexaoNoSwitch(dispositivo, switchDestino);
+                adicionarConexaoNoRouter(destino, routerDispositivo);
+            } else if (dispositivo instanceof Servidor servidorDispositivo) {
+                adicionarConexaoNoSwitch(dispositivo, switchDestino);
+                adicionarConexaoNoServidor(destino, servidorDispositivo);
+            }else if (dispositivo instanceof Terminal terminalDispositivo) {
+                adicionarConexaoNoSwitch(dispositivo, switchDestino);
+                adicionarConexaoNoTerminal(destino, terminalDispositivo);
+            }
         } else if (destino instanceof Servidor servidorDestino) {
+            if (dispositivo instanceof Router routerDispositivo) {
+                adicionarConexaoNoServidor(dispositivo, servidorDestino);
+                adicionarConexaoNoRouter(destino, routerDispositivo);
+            } else if (dispositivo instanceof Switch switchDispositivo) {
+                adicionarConexaoNoServidor(dispositivo, servidorDestino);
+                adicionarConexaoNoSwitch(destino, switchDispositivo);
+            }
             adicionarConexaoNoServidor(dispositivo, servidorDestino);
         } else if (destino instanceof Router routerDestino) {
             adicionarConexaoNoRouter(dispositivo, routerDestino);
@@ -292,6 +308,15 @@ public class App {
             servidorDestino.imprimirMapaPortas();
         } else {
             System.out.println("Não há mais capacidade no Servidor para estabelecer a conexão.");
+        }
+    }
+    private static void adicionarConexaoNoTerminal(Equipamento dispositivo, Terminal terminalDestino) {
+        if(terminalDestino.getLigacaoDisponivel() > 0){
+            terminalDestino.adicionarLigacao(dispositivo);
+            System.out.println("Conexão estabelecida com sucesso no Terminal.");
+            terminalDestino.imprimirLigacao();
+        }else {
+            System.out.println("Não há mais capacidade no Terminal para estabelecer a conexão.");
         }
     }
     private static int obterIndiceValido(Scanner scanner, int tamanhoMaximo) {

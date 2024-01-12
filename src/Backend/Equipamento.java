@@ -10,21 +10,13 @@ public class Equipamento {
         this.nome = nome;
         this.enderecoMAC = enderecoMAC;
     }
-
     // Métodos getters e setters
-
     public String getNome() {
         return nome;
     }
-
     public String getEnderecoMAC() {
         return enderecoMAC;
     }
-
-    public List<Ligacao> getLigacoes() {
-        return ligacoes;
-    }
-
     public void setLigacoes(List<Ligacao> ligacoes) {
         this.ligacoes = ligacoes;
     }
@@ -45,7 +37,6 @@ public class Equipamento {
         Ligacao novaLigacao = new Ligacao(this, destino, tipo);
         ligacoes.add(novaLigacao);
     }
-
     public void removerLigacao(Equipamento destino) {
         ligacoes.removeIf(ligacao -> ligacao.getMacDestino().equals(destino));
     }

@@ -1,13 +1,38 @@
 package Backend;
+import java.util.List;
+import java.util.ArrayList;
+
 // Classe Terminal, que herda de Equipamento
 public class Terminal extends Equipamento {
     private final String ip;
+    private int ligacaoDisponivel = 1;
+    private final ArrayList<Equipamento> ligacoes;
     public Terminal(String nome, String mac, String ip) {
         super(nome, mac);
         this.ip = ip;
+        this.ligacoes = new ArrayList<>(1);
     }
     public String getIp() {
         return ip;
+    }
+    public List<Equipamento> getLigacoes() {  // Change the return type
+        return ligacoes;
+    }
+    public void adicionarLigacao(Equipamento destino) {
+        ligacoes.add(destino);
+        setLigacaoDisponivel();
+    }
+    public int getLigacaoDisponivel() {
+        return ligacaoDisponivel;
+    }
+    public void setLigacaoDisponivel() {
+        this.ligacaoDisponivel = 0;
+    }
+    public void imprimirLigacao() {
+        System.out.println("Ligado:" + getNome());
+        for (Equipamento equipamento : ligacoes) {
+            System.out.println("Nome: "+ equipamento.getNome() +", MAC: " + equipamento.getEnderecoMAC() );
+        }
     }
     @Override
     public String toString() {
