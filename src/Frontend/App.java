@@ -38,10 +38,8 @@ public class App {
             }
 
         } while (opcao != 0);
-
         scanner.close();
     }
-
     private static void exibirMenu() {
         System.out.println("Menu:");
         System.out.println("1. Construir Rede");
@@ -154,7 +152,9 @@ public class App {
         }
         System.out.println("Digite o protocolo do router: ");
         String protocolo = scanner.nextLine();
-        Router router = new Router(nomeRouter, enderecoMACRouter, protocolo);
+        System.out.println("Digite o número de portas do router: ");
+        int numeroPortas = scanner.nextInt();
+        Router router = new Router(nomeRouter, enderecoMACRouter, protocolo, numeroPortas);
         dispositivos.add(router);
     }
     private static void adicionarServidor(Scanner scanner, List<Equipamento> dispositivos) {
@@ -216,14 +216,13 @@ public class App {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
         }
     }
-
     private static Equipamento selecionarDestino(Scanner scanner) {
         System.out.print("Escolha o dispositivo destino (informe o índice): ");
         int indice = obterIndiceValido(scanner, dispositivos.size());
 
         return (indice != -1) ? dispositivos.get(indice) : null;
     }
-    private static void estabelecerConexao(Equipamento dispositivo, Equipamento destino, TipoConexao tipoConexao, List<Ligacao> conexoes) {
+    private static void estabelecerConexao(Equipamento dispositivo, Equipamento destino, TipoConexao tipoConexao, List<Ligacao> conexoes)   {
         Ligacao conexao = new Ligacao(dispositivo, destino, tipoConexao);
         dispositivo.adicionarLigacao(destino, tipoConexao);
         conexoes.add(conexao);
@@ -232,6 +231,8 @@ public class App {
             adicionarConexaoNoSwitch(dispositivo, switchDestino);
         } else if (destino instanceof Servidor servidorDestino) {
             adicionarConexaoNoServidor(dispositivo, servidorDestino);
+        } else if (destino instanceof Router routerDestino) {
+            adicionarConexaoNoRouter(dispositivo, routerDestino);
         } else {
             System.out.println("Conexão estabelecida com sucesso.");
         }
@@ -250,6 +251,22 @@ public class App {
             switchDestino.imprimirMapaPortas();
         } else {
             System.out.println("Não há portas disponíveis no Switch para estabelecer a conexão.");
+        }
+    }
+    private static void adicionarConexaoNoRouter(Equipamento dispositivo, Router routerDestino) {
+        int portasDisponiveis = routerDestino.getPortasDisponiveis();
+
+        if (portasDisponiveis > 0) {
+            int portaDestino = routerDestino.getNumeroPortas() - portasDisponiveis;
+
+            routerDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), portaDestino);
+            routerDestino.registrarPortaOcupada(portaDestino, dispositivo.getEnderecoMAC());
+            System.out.println("Conexão estabelecida com sucesso no Router.");
+
+            // Imprimir o mapa de portas do Router
+            routerDestino.imprimirMapaPortas();
+        } else {
+            System.out.println("Não há portas disponíveis no Router para estabelecer a conexão.");
         }
     }
     private static void adicionarConexaoNoServidor(Equipamento dispositivo, Servidor servidorDestino) {
