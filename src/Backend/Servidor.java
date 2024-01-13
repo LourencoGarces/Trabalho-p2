@@ -5,11 +5,13 @@ import java.util.Map;
 public class Servidor extends Equipamento {
     private final String enderecoIP;
     private int capacidade;
+    private int capacidadeDisponivel ;
     private Map<String, Integer> tabelaEncaminhamento; // Tabela de encaminhamento
     public Servidor(String nome, String enderecoMAC, String enderecoIP, int capacidade) {
         super(nome, enderecoMAC);
         this.enderecoIP = enderecoIP;
         this.capacidade = capacidade;
+        this.capacidadeDisponivel = capacidade; // Inicializa o número de portas disponíveis
         this.tabelaEncaminhamento = new HashMap<>(); // Inicializa a tabela de encaminhamento
     }
     public String getEnderecoIP() {
@@ -44,10 +46,13 @@ public class Servidor extends Equipamento {
         tabelaEncaminhamento.put(enderecoMAC, porta);
         usarCapacidade(); // Usa um lugar
     }
+    public int getCapacidadeDisponivel() {
+        return capacidadeDisponivel;
+    }
     // Método para usar a capacidade (chamado ao estabelecer uma nova conexão)
     public void usarCapacidade() {
-        if (capacidade > 0) {
-            capacidade--;
+        if (capacidadeDisponivel > 0) {
+            capacidadeDisponivel--;
         }
     }
     public void registrarPortaOcupada(int porta, String enderecoMACDestino) {

@@ -315,7 +315,7 @@ public class App {
         }
     }
     private static void adicionarConexaoNoServidor(Equipamento dispositivo, Servidor servidorDestino) {
-        int capacidadeDisponivel = servidorDestino.getCapacidade();
+        int capacidadeDisponivel = servidorDestino.getCapacidadeDisponivel();
 
         if (capacidadeDisponivel > 0) {
             int portaDestino = servidorDestino.getCapacidade() - capacidadeDisponivel;
