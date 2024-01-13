@@ -252,10 +252,32 @@ public class App {
             } else if (dispositivo instanceof Switch switchDispositivo) {
                 adicionarConexaoNoServidor(dispositivo, servidorDestino);
                 adicionarConexaoNoSwitch(destino, switchDispositivo);
+            }else if (dispositivo instanceof Terminal terminalDispositivo) {
+                adicionarConexaoNoServidor(dispositivo, servidorDestino);
+                adicionarConexaoNoTerminal(destino, terminalDispositivo);
             }
-            adicionarConexaoNoServidor(dispositivo, servidorDestino);
         } else if (destino instanceof Router routerDestino) {
-            adicionarConexaoNoRouter(dispositivo, routerDestino);
+            if (dispositivo instanceof Switch switchDispositivo) {
+                adicionarConexaoNoRouter(dispositivo, routerDestino);
+                adicionarConexaoNoSwitch(destino, switchDispositivo);
+            } else if (dispositivo instanceof Servidor servidorDispositivo) {
+                adicionarConexaoNoRouter(dispositivo, routerDestino);
+                adicionarConexaoNoServidor(destino, servidorDispositivo);
+            }else if (dispositivo instanceof Terminal terminalDispositivo) {
+                adicionarConexaoNoRouter(dispositivo, routerDestino);
+                adicionarConexaoNoTerminal(destino, terminalDispositivo);
+            }
+        } else if (destino instanceof Terminal terminalDestino) {
+            if (dispositivo instanceof Switch switchDispositivo) {
+                adicionarConexaoNoTerminal(dispositivo, terminalDestino);
+                adicionarConexaoNoSwitch(destino, switchDispositivo);
+            } else if (dispositivo instanceof Servidor servidorDispositivo) {
+                adicionarConexaoNoTerminal(dispositivo, terminalDestino);
+                adicionarConexaoNoServidor(destino, servidorDispositivo);
+            }else if (dispositivo instanceof Router routerDispositivo) {
+                adicionarConexaoNoTerminal(dispositivo, terminalDestino);
+                adicionarConexaoNoRouter(destino, routerDispositivo);
+            }
         } else {
             System.out.println("Conexão estabelecida com sucesso.");
         }
@@ -293,8 +315,6 @@ public class App {
         }
     }
     private static void adicionarConexaoNoServidor(Equipamento dispositivo, Servidor servidorDestino) {
-        servidorDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), servidorDestino.getCapacidade() - 1);
-        System.out.println("Conexão estabelecida com sucesso no Servidor.");
         int capacidadeDisponivel = servidorDestino.getCapacidade();
 
         if (capacidadeDisponivel > 0) {
