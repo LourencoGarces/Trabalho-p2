@@ -1,29 +1,42 @@
 package Backend;
 
 import java.io.Serializable;
+
+// Classe para representar uma ligação entre equipamentos
 public class Ligacao implements Serializable {
-    private Equipamento macorigem;
-    private Equipamento macdestino;
-    private TipoConexao tipoConexao;
-    public Ligacao(Equipamento macorigem, Equipamento macdestino, TipoConexao tipoConexao) {
-        this.macorigem = macorigem;
-        this.macdestino = macdestino;
+    private Equipamento macOrigem; // Equipamento de origem
+    private Equipamento macDestino; // Equipamento de destino
+    private TipoConexao tipoConexao; // Tipo de conexão da ligação
+
+    // Construtor da classe Ligacao
+    public Ligacao(Equipamento macOrigem, Equipamento macDestino, TipoConexao tipoConexao) {
+        this.macOrigem = macOrigem;
+        this.macDestino = macDestino;
         this.tipoConexao = tipoConexao;
 
-        macorigem.adicionarLigacaoDireta(this);
-        macdestino.adicionarLigacaoDireta(this);
+        // Adiciona esta ligação como ligação direta nos equipamentos de origem e destino
+        macOrigem.adicionarLigacaoDireta(this);
+        macDestino.adicionarLigacaoDireta(this);
     }
+
+    // Método para obter o equipamento de origem da ligação
     public Equipamento getMacOrigem() {
-        return macorigem;
+        return macOrigem;
     }
+
+    // Método para obter o equipamento de destino da ligação
     public Equipamento getMacDestino() {
-        return macdestino;
+        return macDestino;
     }
+
+    // Método para obter o tipo de conexão da ligação
     public TipoConexao getTipoConexao() {
         return tipoConexao;
     }
+
+    // Sobrescrita do método toString para fornecer uma representação em string da ligação
     @Override
     public String toString() {
-        return "Ligacao [" + macorigem + ", " + macdestino + ", TipoConexao=" + tipoConexao + "]";
+        return "Ligacao [" + macOrigem + ", " + macDestino + ", TipoConexao=" + tipoConexao + "]";
     }
 }

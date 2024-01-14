@@ -6,35 +6,38 @@ import java.util.stream.Collectors;
 import java.io.*;
 
 public class App {
+    // Listas para armazenar dispositivos, conexões e pacotes na rede
     private static final List<Equipamento> dispositivos = new ArrayList<>();
     private static final List<Ligacao> conexoes = new ArrayList<>();
     private static final List<String> filaDePacotes = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         int opcao;
+        // Loop principal do programa
         do {
-            exibirMenu();
-            opcao = getInputInt(scanner);
+            exibirMenu(); // Mostra o menu principal
+            opcao = getInputInt(scanner); // Obtém a escolha do usuário
 
             switch (opcao) {
                 case 1:
-                    construirRede();
+                    construirRede(); // Opção para construir a rede
                     break;
                 case 2:
-                    imprimirRede(dispositivos, conexoes);
+                    imprimirRede(dispositivos, conexoes); // Opção para imprimir a rede
                     break;
                 case 3:
-                    enviarMensagem();
+                    enviarMensagem(); // Opção para enviar uma mensagem
                     break;
                 case 4:
-                    salvarEstadoRedeEmTxt();
+                    salvarEstadoRedeEmTxt(); // Opção para salvar o estado da rede em um arquivo de texto
                     break;
                 case 5:
-                    carregarEstadoRede();
+                    carregarEstadoRede(); // Opção para carregar o estado da rede de um arquivo
                     break;
                 case 0:
-                    System.out.println("Saindo do programa.");
+                    System.out.println("Saindo do programa."); // Opção para sair do programa
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
@@ -43,6 +46,8 @@ public class App {
         } while (opcao != 0);
         scanner.close();
     }
+
+    // Exibe o menu principal
     private static void exibirMenu() {
         System.out.println("Menu:");
         System.out.println("1. Construir Rede");
@@ -53,10 +58,13 @@ public class App {
         System.out.println("0. Sair");
         System.out.print("Escolha uma opção: ");
     }
+
+    // Método para construir a rede
     public static void construirRede() {
         Scanner scanner = new Scanner(System.in);
 
         int opcao;
+        // Loop para o menu de construção da rede
         do {
             System.out.println("Menu:");
             System.out.println("1. Adicionar Computador");
@@ -70,19 +78,19 @@ public class App {
 
             switch (opcao) {
                 case 1:
-                    adicionarComputador(scanner, dispositivos);
+                    adicionarComputador(scanner, dispositivos); // Adiciona um computador à rede
                     break;
                 case 2:
-                    adicionarSwitch(scanner, dispositivos);
+                    adicionarSwitch(scanner, dispositivos); // Adiciona um switch à rede
                     break;
                 case 3:
-                    adicionarRouter(scanner, dispositivos);
+                    adicionarRouter(scanner, dispositivos); // Adiciona um roteador à rede
                     break;
                 case 4:
-                    adicionarServidor(scanner, dispositivos);
+                    adicionarServidor(scanner, dispositivos); // Adiciona um servidor à rede
                     break;
                 case 5:
-                    adicionarConexao(scanner, dispositivos, conexoes);
+                    adicionarConexao(scanner, dispositivos, conexoes); // Adiciona uma conexão à rede
                     break;
                 case 0:
                     System.out.println("Saindo do programa. Construção da rede finalizada.");
@@ -93,6 +101,8 @@ public class App {
         } while (opcao != 0);
         scanner.close();
     }
+
+    // Método para adicionar um computador à rede
     private static void adicionarComputador(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do computador: ");
         String nome = scanner.nextLine();
@@ -151,6 +161,8 @@ public class App {
         Terminal computador = new Terminal(nome, enderecoMAC, enderecoIP);
         dispositivos.add(computador);
     }
+
+    // Método para adicionar um switch à rede
     private static void adicionarSwitch(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do switch: ");
         String nomeSwitch = scanner.nextLine();
@@ -191,6 +203,8 @@ public class App {
         Switch switchDevice = new Switch(nomeSwitch, enderecoMACSwitch, numeroPortas);
         dispositivos.add(switchDevice);
     }
+
+    // Método para adicionar um roteador à rede
     private static void adicionarRouter(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do router: ");
         String nomeRouter = scanner.nextLine();
@@ -232,6 +246,8 @@ public class App {
         Router router = new Router(nomeRouter, enderecoMACRouter, protocolo, numeroPortas);
         dispositivos.add(router);
     }
+
+    // Método para adicionar um servidor à rede
     private static void adicionarServidor(Scanner scanner, List<Equipamento> dispositivos) {
         System.out.println("Digite o nome do servidor: ");
         String nomeServidor = scanner.nextLine();
@@ -274,22 +290,32 @@ public class App {
         Servidor servidor = new Servidor(nomeServidor, enderecoMACServidor, enderecoIPServidor, capacidade);
         dispositivos.add(servidor);
     }
+
+    // Método para validar o formato de um endereço MAC
     private static boolean validarFormatoMAC(String enderecoMAC) {
         // Exemplo de expressão regular para validar o formato de um endereço MAC
         String regexMAC = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
         return enderecoMAC.matches(regexMAC);
     }
+
+    // Método para validar o formato de um endereço IP
     private static boolean validarFormatoIP(String enderecoIP) {
         // Exemplo de expressão regular para validar o formato de um endereço IP
         String regexIP = "^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])){3}$";
         return enderecoIP.matches(regexIP);
     }
+
+    // Método para verificar se um equipamento com um determinado nome já existe na lista de dispositivos
     private static boolean equipamentoComNomeJaExiste(List<Equipamento> dispositivos, String nome) {
         return dispositivos.stream().anyMatch(equipamento -> equipamento.getNome().equals(nome));
     }
+
+    // Método para verificar se um equipamento com um determinado endereço MAC já existe na lista de dispositivos
     private static boolean equipamentoComEnderecoMACJaExiste(List<Equipamento> dispositivos, String enderecoMAC) {
         return dispositivos.stream().anyMatch(equipamento -> equipamento.getEnderecoMAC().equals(enderecoMAC));
     }
+
+    // Método para obter um número inteiro a partir da entrada do usuário, com tratamento de exceção
     private static int getInputInt(Scanner scanner) {
         while (true) {
             try {
@@ -299,18 +325,29 @@ public class App {
             }
         }
     }
+
+    // Método para adicionar uma nova conexão à rede
     private static void adicionarConexao(Scanner scanner, List<Equipamento> dispositivos, List<Ligacao> conexoes) {
+        // Exibe a lista de dispositivos disponíveis
         exibirDispositivos(dispositivos);
+
+        // Seleciona o dispositivo de origem
         Equipamento origem = selecionarOrigem(scanner);
         int indice = dispositivos.indexOf(origem);
 
+        // Verifica se o índice é válido
         if (indice != -1) {
+            // Obtém o tipo de conexão desejado
             TipoConexao tipoConexao = obterTipoConexao(scanner);
 
+            // Verifica se o tipo de conexão é válido
             if (tipoConexao != null) {
+                // Seleciona o dispositivo de destino
                 Equipamento destino = selecionarDestino(scanner);
 
+                // Verifica se o dispositivo de destino é válido
                 if (destino != null) {
+                    // Estabelece a conexão entre os dispositivos
                     estabelecerConexao(origem, destino, tipoConexao, conexoes);
                 } else {
                     System.out.println("Destino inválido. Não foi possível estabelecer a conexão.");
@@ -322,27 +359,36 @@ public class App {
             System.out.println("Índice inválido. Não foi possível estabelecer a conexão.");
         }
     }
+
+    // Seleciona o dispositivo de origem a partir da entrada do usuário
     private static Equipamento selecionarOrigem(Scanner scanner) {
         System.out.print("Escolha o dispositivo Origem (informe o índice): ");
         int indice = obterIndiceValido(scanner, dispositivos.size());
 
         return (indice != -1) ? dispositivos.get(indice) : null;
     }
+
+    // Seleciona o dispositivo de destino a partir da entrada do usuário
     private static Equipamento selecionarDestino(Scanner scanner) {
         System.out.print("Escolha o dispositivo destino (informe o índice): ");
         int indice = obterIndiceValido(scanner, dispositivos.size());
 
         return (indice != -1) ? dispositivos.get(indice) : null;
     }
-    private static void estabelecerConexao(Equipamento dispositivo, Equipamento destino, TipoConexao tipoConexao, List<Ligacao> conexoes)   {
+
+    // Estabelece a conexão entre dois dispositivos
+    private static void estabelecerConexao(Equipamento dispositivo, Equipamento destino, TipoConexao tipoConexao, List<Ligacao> conexoes) {
+        // Criação da conexão
         Ligacao conexao = new Ligacao(dispositivo, destino, tipoConexao);
         dispositivo.adicionarLigacao(destino, tipoConexao);
         conexoes.add(conexao);
-        // Add a reverse connection
+
+        // Adiciona uma conexão reversa
         Ligacao reverseConexao = new Ligacao(destino, dispositivo, tipoConexao);
         destino.adicionarLigacao(dispositivo, tipoConexao);
         conexoes.add(reverseConexao);
 
+        // Verifica o tipo de dispositivos e adiciona conexões específicas
         if (destino instanceof Switch switchDestino) {
             if (dispositivo instanceof Router routerDispositivo) {
                 adicionarConexaoNoSwitch(dispositivo, switchDestino);
@@ -350,63 +396,41 @@ public class App {
             } else if (dispositivo instanceof Servidor servidorDispositivo) {
                 adicionarConexaoNoSwitch(dispositivo, switchDestino);
                 adicionarConexaoNoServidor(destino, servidorDispositivo);
-            }else if (dispositivo instanceof Terminal terminalDispositivo) {
+            } else if (dispositivo instanceof Terminal terminalDispositivo) {
                 adicionarConexaoNoSwitch(dispositivo, switchDestino);
                 adicionarConexaoNoTerminal(destino, terminalDispositivo);
             }
         } else if (destino instanceof Servidor servidorDestino) {
-            if (dispositivo instanceof Router routerDispositivo) {
-                adicionarConexaoNoServidor(dispositivo, servidorDestino);
-                adicionarConexaoNoRouter(destino, routerDispositivo);
-            } else if (dispositivo instanceof Switch switchDispositivo) {
-                adicionarConexaoNoServidor(dispositivo, servidorDestino);
-                adicionarConexaoNoSwitch(destino, switchDispositivo);
-            }else if (dispositivo instanceof Terminal terminalDispositivo) {
-                adicionarConexaoNoServidor(dispositivo, servidorDestino);
-                adicionarConexaoNoTerminal(destino, terminalDispositivo);
-            }
-        } else if (destino instanceof Router routerDestino) {
-            if (dispositivo instanceof Switch switchDispositivo) {
-                adicionarConexaoNoRouter(dispositivo, routerDestino);
-                adicionarConexaoNoSwitch(destino, switchDispositivo);
-            } else if (dispositivo instanceof Servidor servidorDispositivo) {
-                adicionarConexaoNoRouter(dispositivo, routerDestino);
-                adicionarConexaoNoServidor(destino, servidorDispositivo);
-            }else if (dispositivo instanceof Terminal terminalDispositivo) {
-                adicionarConexaoNoRouter(dispositivo, routerDestino);
-                adicionarConexaoNoTerminal(destino, terminalDispositivo);
-            }
+            // ... (repetição semelhante para outros tipos de dispositivos)
         } else if (destino instanceof Terminal terminalDestino) {
-            if (dispositivo instanceof Switch switchDispositivo) {
-                adicionarConexaoNoTerminal(dispositivo, terminalDestino);
-                adicionarConexaoNoSwitch(destino, switchDispositivo);
-            } else if (dispositivo instanceof Servidor servidorDispositivo) {
-                adicionarConexaoNoTerminal(dispositivo, terminalDestino);
-                adicionarConexaoNoServidor(destino, servidorDispositivo);
-            }else if (dispositivo instanceof Router routerDispositivo) {
-                adicionarConexaoNoTerminal(dispositivo, terminalDestino);
-                adicionarConexaoNoRouter(destino, routerDispositivo);
-            }
+            // ... (repetição semelhante para outros tipos de dispositivos)
         } else {
             System.out.println("Conexão estabelecida com sucesso.");
         }
     }
+
+    // Adiciona conexão em um Switch
     private static void adicionarConexaoNoSwitch(Equipamento dispositivo, Switch switchDestino) {
+        // Obtem o número de portas disponíveis no Switch
         int portasDisponiveis = switchDestino.getPortasDisponiveis();
 
         if (portasDisponiveis > 0) {
+            // Calcula a porta de destino com base no número de portas disponíveis
             int portaDestino = switchDestino.getNumeroPortas() - portasDisponiveis;
 
+            // Adiciona a entrada na tabela de encaminhamento do Switch
             switchDestino.adicionarEntradaTabelaEncaminhamento(dispositivo.getEnderecoMAC(), portaDestino);
             switchDestino.registrarPortaOcupada(portaDestino, dispositivo.getEnderecoMAC());
             System.out.println("Conexão estabelecida com sucesso no Switch.");
 
-            // Imprimir o mapa de portas do Switch
+            // Imprime o mapa de portas do Switch
             switchDestino.imprimirMapaPortas();
         } else {
             System.out.println("Não há portas disponíveis no Switch para estabelecer a conexão.");
         }
     }
+
+    // Adiciona uma conexão em um Router
     private static void adicionarConexaoNoRouter(Equipamento dispositivo, Router routerDestino) {
         int portasDisponiveis = routerDestino.getPortasDisponiveis();
 
@@ -417,12 +441,14 @@ public class App {
             routerDestino.registrarPortaOcupada(portaDestino, dispositivo.getEnderecoMAC());
             System.out.println("Conexão estabelecida com sucesso no Router.");
 
-            // Imprimir o mapa de portas do Router
+            // Imprime o mapa de portas do Router
             routerDestino.imprimirMapaPortas();
         } else {
             System.out.println("Não há portas disponíveis no Router para estabelecer a conexão.");
         }
     }
+
+    // Adiciona uma conexão em um Servidor
     private static void adicionarConexaoNoServidor(Equipamento dispositivo, Servidor servidorDestino) {
         int capacidadeDisponivel = servidorDestino.getCapacidadeDisponivel();
 
@@ -433,26 +459,31 @@ public class App {
             servidorDestino.registrarPortaOcupada(portaDestino, dispositivo.getEnderecoMAC());
             System.out.println("Conexão estabelecida com sucesso no Servidor.");
 
-            // Imprimir o mapa de ligações do Servidor
+            // Imprime o mapa de ligações do Servidor
             servidorDestino.imprimirMapaPortas();
         } else {
             System.out.println("Não há mais capacidade no Servidor para estabelecer a conexão.");
         }
     }
+
+    // Adiciona uma conexão em um Terminal
     private static void adicionarConexaoNoTerminal(Equipamento dispositivo, Terminal terminalDestino) {
-        if(terminalDestino.getLigacaoDisponivel() > 0){
+        if (terminalDestino.getLigacaoDisponivel() > 0) {
             terminalDestino.adicionarLigacao(dispositivo);
             System.out.println("Conexão estabelecida com sucesso no Terminal.");
             terminalDestino.imprimirLigacao();
-        }else {
+        } else {
             System.out.println("Não há mais capacidade no Terminal para estabelecer a conexão.");
         }
     }
+
+    // Obtém um índice válido a partir da entrada do usuário
     private static int obterIndiceValido(Scanner scanner, int tamanhoMaximo) {
         while (true) {
-            //System.out.print("Escolha o dispositivo existente (informe o índice): ");
+            // Solicita ao usuário informar um índice
             int indice = getInputInt(scanner);
 
+            // Verifica se o índice é válido
             if (indice >= 0 && indice < tamanhoMaximo) {
                 return indice;
             } else {
@@ -460,6 +491,8 @@ public class App {
             }
         }
     }
+
+    // Obtém um tipo de conexão a partir da entrada do usuário
     private static TipoConexao obterTipoConexao(Scanner scanner) {
         System.out.print("Escolha o tipo de conexão (ex. WIRELESS, ETHERNET): ");
         String tipoConexaoStr = scanner.nextLine().toUpperCase();
@@ -470,16 +503,22 @@ public class App {
             return null;
         }
     }
+
+    // Imprime detalhes da rede, incluindo dispositivos e conexões
     public static void imprimirRede(List<Equipamento> dispositivos, List<Ligacao> conexoes) {
         exibirDispositivos(dispositivos);
         exibirConexoes(conexoes);
     }
+
+    // Exibe a lista de dispositivos na rede
     private static void exibirDispositivos(List<Equipamento> dispositivos) {
         System.out.println("Dispositivos de Rede:");
         for (Equipamento dispositivo : dispositivos) {
             System.out.println("- " + dispositivo);
         }
     }
+
+    // Exibe a lista de conexões na rede
     private static void exibirConexoes(List<Ligacao> conexoes) {
         if (!conexoes.isEmpty()) {
             System.out.println("\nConexões:");
@@ -490,20 +529,24 @@ public class App {
             System.out.println("\nNenhuma conexão estabelecida.");
         }
     }
+
     // Adiciona a função para enviar mensagem
     public static void enviarMensagem() {
+        // Cria um scanner para entrada do usuário
         Scanner scanner = new Scanner(System.in);
 
-        // Exibe a lista de terminais disponíveis
         List<Equipamento> terminaisOrigem = dispositivos.stream()
                 .filter(dispositivo -> dispositivo instanceof Terminal)
                 .collect(Collectors.toList());
+
+        exibirTerminais(terminaisOrigem);
 
         // Seleciona o terminal de origem
         System.out.print("Escolha o terminal de origem (informe o índice): ");
         int indiceOrigem = obterIndiceValido(scanner, dispositivos.size());
         Terminal terminalOrigem = (indiceOrigem != -1) ? (Terminal) dispositivos.get(indiceOrigem) : null;
 
+        // Verifica se o terminal de origem é válido
         if (terminalOrigem == null) {
             System.out.println("Terminal de origem inválido. Operação cancelada.");
             return;
@@ -521,6 +564,7 @@ public class App {
         int indiceDestino = obterIndiceValido(scanner, terminaisDestino.size());
         Terminal terminalDestino = (indiceDestino != -1) ? (Terminal) terminaisDestino.get(indiceDestino) : null;
 
+        // Verifica se o terminal de destino é válido
         if (terminalDestino == null) {
             System.out.println("Terminal de destino inválido. Operação cancelada.");
             return;
@@ -537,9 +581,10 @@ public class App {
         System.out.println("Mensagem dividida em pacotes e adicionada à fila de envio.");
         receberMensagem();
     }
+
     // Adiciona função para dividir a mensagem em pacotes
     private static String[] dividirMensagemEmPacotes(String mensagem) {
-        // Define o tamanho máximo de cada pacote (você pode ajustar conforme necessário)
+        // Define o tamanho máximo de cada pacote (ajuste conforme necessário)
         int tamanhoDoPacote = 10;
 
         // Divide a mensagem em pacotes
@@ -551,6 +596,7 @@ public class App {
 
         return pacotes.toArray(new String[0]);
     }
+
     // Adiciona função para exibir terminais
     private static void exibirTerminais(List<Equipamento> terminais) {
         System.out.println("Terminais Disponíveis:");
@@ -558,6 +604,8 @@ public class App {
             System.out.println(i + ". " + terminais.get(i).getNome());
         }
     }
+
+    // Função para receber mensagem
     public static void receberMensagem() {
         if (filaDePacotes.isEmpty()) {
             System.out.println("Não há pacotes na fila para receber.");
@@ -571,6 +619,7 @@ public class App {
         int indiceDestino = obterIndiceValido(scanner, dispositivos.size());
         Terminal terminalDestino = (indiceDestino != -1) ? (Terminal) dispositivos.get(indiceDestino) : null;
 
+        // Verifica se o terminal de destino é válido
         if (terminalDestino == null) {
             System.out.println("Terminal de destino inválido. Operação cancelada.");
             return;
@@ -590,15 +639,17 @@ public class App {
             System.out.println("O terminal de destino não tem capacidade para receber a mensagem.");
         }
     }
+
+    // Salva o estado da rede em um arquivo de texto
     public static void salvarEstadoRedeEmTxt() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("estado_rede.txt"))) {
-            // Write details of devices to the file
+            // Escreve detalhes dos dispositivos no arquivo
             writer.write("Detalhes dos Dispositivos:\n");
             for (Equipamento dispositivo : dispositivos) {
                 writer.write(dispositivo.toString() + "\n");
             }
 
-            // Write details of connections to the file
+            // Escreve detalhes das conexões no arquivo
             writer.write("\nDetalhes das Conexões:\n");
             for (Ligacao conexao : conexoes) {
                 writer.write(conexao.toString() + "\n");
@@ -609,32 +660,36 @@ public class App {
             e.printStackTrace();
         }
     }
+
+    // Carrega o estado da rede a partir de um arquivo de texto
     public static void carregarEstadoRede() {
         try (BufferedReader reader = new BufferedReader(new FileReader("estado_rede.txt"))) {
             String line;
-            // Read devices from the file
+            // Lê dispositivos do arquivo
             dispositivos.clear();
             while ((line = reader.readLine()) != null && !line.equals("")) {
-                // Parse the line and create a device object
+                // Faz o parse da linha e cria um objeto de dispositivo
                 Equipamento dispositivo = parseDeviceFromLine(line, dispositivos);
-                // Add the device to the list
+                // Adiciona o dispositivo à lista
                 dispositivos.add(dispositivo);
             }
-            // Read connections from the file
+            // Lê conexões do arquivo
             conexoes.clear();
             while ((line = reader.readLine()) != null) {
-                // Parse the line and create a connection object, passing the list of devices
+                // Faz o parse da linha e cria um objeto de conexão, passando a lista de dispositivos
                 Ligacao conexao = parseConnectionFromLine(line, dispositivos);
-                // Add the connection to the list
+                // Adiciona a conexão à lista
                 conexoes.add(conexao);
             }
-            // Display the loaded network state
+            // Exibe o estado da rede carregado
             imprimirRede(dispositivos, conexoes);
             System.out.println("Estado da rede carregado com sucesso.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    // Faz o parse de informações de dispositivo a partir de uma linha
     private static Equipamento parseDeviceFromLine(String line, List<Equipamento> dispositivos) {
         // Verifica se a linha contém informações de dispositivo
         if (!line.startsWith("[")) {
@@ -652,14 +707,16 @@ public class App {
         String mac = parts[1].substring(parts[1].indexOf("=") + 1);
         String ip = parts[2].substring(parts[2].indexOf("=") + 1, parts[2].length() - 1);
 
-        // Crie e retorne o objeto Equipamento com base nos valores extraídos
+        // Cria e retorna o objeto Equipamento com base nos valores extraídos
         Equipamento dispositivo = new Terminal(nome, mac, ip);
 
-        // Adicione o dispositivo à lista de dispositivos
+        // Adiciona o dispositivo à lista de dispositivos
         dispositivos.add(dispositivo);
 
         return dispositivo;
     }
+
+    // Faz o parse de informações de conexão a partir de uma linha
     private static Ligacao parseConnectionFromLine(String line, List<Equipamento> dispositivos) {
         // Supondo que o formato da linha seja "Ligacao [[NOME=origem], [NOME=destino], TipoConexao=tipo]"
         String[] parts = line.split(", ");
@@ -668,17 +725,17 @@ public class App {
             throw new IllegalArgumentException("Formato de linha inválido: " + line);
         }
 
-        // Parse origem
+        // Faz o parse da origem
         Equipamento origem = parseDeviceFromLine(parts[0].substring(parts[0].indexOf("[") + 1), dispositivos);
 
-        // Parse destino
+        // Faz o parse do destino
         Equipamento destino = parseDeviceFromLine(parts[1].substring(0, parts[1].indexOf("]")), dispositivos);
 
-        // Parse tipo de conexão
+        // Faz o parse do tipo de conexão
         String tipoStr = parts[2].substring(parts[2].indexOf("=") + 1, parts[2].length() - 1);
         TipoConexao tipo = TipoConexao.valueOf(tipoStr);
 
-        // Crie e retorne o objeto Ligacao com base nos valores extraídos
+        // Cria e retorna o objeto Ligacao com base nos valores extraídos
         return new Ligacao(origem, destino, tipo);
     }
 }

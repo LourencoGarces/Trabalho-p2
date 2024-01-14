@@ -1,6 +1,10 @@
 package Backend;
 import java.util.Random;
+
+// Classe para gerar endereços MAC aleatórios
 public class GeradorMacAleatorio {
+
+    // Método que gera e retorna um endereço MAC aleatório
     public static String gerarMacAleatorio() {
         Random rand = new Random();
         byte[] macAddress = new byte[6];
@@ -15,9 +19,9 @@ public class GeradorMacAleatorio {
             if (sb.length() > 0) {
                 sb.append(":");
             }
-            sb.append(String.format("%02x", b));
+            sb.append(String.format("%02x", b)); // Converte o byte para hexadecimal
         }
 
-        return sb.toString().toUpperCase();
+        return sb.toString().toUpperCase(); // Retorna o endereço MAC gerado em maiúsculas
     }
 }
