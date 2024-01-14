@@ -1,5 +1,7 @@
 package Backend;
-public class Ligacao {
+
+import java.io.Serializable;
+public class Ligacao implements Serializable {
     private Equipamento macorigem;
     private Equipamento macdestino;
     private TipoConexao tipoConexao;
@@ -7,6 +9,9 @@ public class Ligacao {
         this.macorigem = macorigem;
         this.macdestino = macdestino;
         this.tipoConexao = tipoConexao;
+
+        macorigem.adicionarLigacaoDireta(this);
+        macdestino.adicionarLigacaoDireta(this);
     }
     public Equipamento getMacOrigem() {
         return macorigem;
@@ -19,6 +24,6 @@ public class Ligacao {
     }
     @Override
     public String toString() {
-        return "Ligacao [" + macorigem + macdestino + ", TipoConexao=" + tipoConexao + "]";
+        return "Ligacao [" + macorigem + ", " + macdestino + ", TipoConexao=" + tipoConexao + "]";
     }
 }

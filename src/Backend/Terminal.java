@@ -1,9 +1,11 @@
 package Backend;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.io.Serializable;
 
 // Classe Terminal, que herda de Equipamento
-public class Terminal extends Equipamento {
+public class Terminal extends Equipamento implements Serializable {
     private final String ip;
     private int ligacaoDisponivel = 1;
     private final ArrayList<Equipamento> ligacoes;
@@ -15,7 +17,7 @@ public class Terminal extends Equipamento {
     public String getIp() {
         return ip;
     }
-    public List<Equipamento> getLigacoes() {  // Change the return type
+    public List<Equipamento> getLigacoes() {
         return ligacoes;
     }
     public void adicionarLigacao(Equipamento destino) {
@@ -31,7 +33,7 @@ public class Terminal extends Equipamento {
     public void imprimirLigacao() {
         System.out.println("Ligado:" + getNome());
         for (Equipamento equipamento : ligacoes) {
-            System.out.println("Nome: "+ equipamento.getNome() +", MAC: " + equipamento.getEnderecoMAC() );
+            System.out.println("Nome: " + equipamento.getNome() + ", MAC: " + equipamento.getEnderecoMAC());
         }
     }
     @Override

@@ -1,9 +1,9 @@
 package Backend;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
 // Classe Roteador, que herda de Equipamento
-public class Router extends Equipamento {
+public class Router extends Equipamento implements Serializable {
     private final String protocolo;
     private final int numeroPortas;
     private int portasDisponiveis; // Nova variável para rastrear as portas disponíveis

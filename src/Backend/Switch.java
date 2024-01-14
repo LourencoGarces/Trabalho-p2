@@ -1,11 +1,12 @@
 package Backend;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-public class Switch extends Equipamento {
+public class Switch extends Equipamento implements Serializable {
     private final int numeroPortas;
-    private int portasDisponiveis; // Nova variável para rastrear as portas disponíveis
-    private Map<String, Integer> tabelaEncaminhamento; // Tabela de encaminhamento
+    private int portasDisponiveis;
+    private Map<String, Integer> tabelaEncaminhamento;
     public Switch(String nome, String enderecoMAC, int numeroPortas) {
         super(nome, enderecoMAC);
         this.numeroPortas = numeroPortas;
@@ -26,7 +27,6 @@ public class Switch extends Equipamento {
         }
         return -1; // Retorna -1 se o endereço MAC não for encontrado (envia para todas as portas)
     }
-    // Adiciona um endereço MAC e a porta correspondente à tabela de encaminhamento
     public void adicionarEntradaTabelaEncaminhamento(String enderecoMAC, int porta) {
         // Verifica se o endereço MAC já está na tabela de encaminhamento
         if (tabelaEncaminhamento.containsKey(enderecoMAC)) {
@@ -44,7 +44,6 @@ public class Switch extends Equipamento {
         tabelaEncaminhamento.put(enderecoMAC, porta);
         usarPorta(); // Usa uma porta
     }
-    // Método para usar uma porta (chamado ao estabelecer uma nova conexão)
     public void usarPorta() {
         if (portasDisponiveis > 0) {
             portasDisponiveis--;

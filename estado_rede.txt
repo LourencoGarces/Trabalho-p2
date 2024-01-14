@@ -1,0 +1,7 @@
+Detalhes dos Dispositivos:
+Nome=pc, MAC=1, Ligacoes=[Ligacao [[NOME=pc, MAC=1, Ip=1], [NOME=pc2, MAC=2, Ip=2], TipoConexao=ETHERNET]]
+Nome=pc2, MAC=2, Ligacoes=[Ligacao [[NOME=pc2, MAC=2, Ip=2], [NOME=pc, MAC=1, Ip=1], TipoConexao=ETHERNET]]
+
+Detalhes das Conexões:
+Ligacao [[NOME=pc, MAC=1, Ip=1], [NOME=pc2, MAC=2, Ip=2], TipoConexao=ETHERNET]
+Ligacao [[NOME=pc2, MAC=2, Ip=2], [NOME=pc, MAC=1, Ip=1], TipoConexao=ETHERNET]

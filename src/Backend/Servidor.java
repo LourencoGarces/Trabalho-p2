@@ -1,8 +1,9 @@
 package Backend;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-public class Servidor extends Equipamento {
+public class Servidor extends Equipamento implements Serializable {
     private final String enderecoIP;
     private int capacidade;
     private int capacidadeDisponivel ;
